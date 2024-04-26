@@ -1,16 +1,23 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import confetti from "canvas-confetti"
 import { Square } from "./components/square";
 import { TURNS } from "./constants";
 import { checkWinnerFrom, checkEndGame} from "./logic/board";
 import { WinnerModal } from "./components/WinnerModal";
+import { resetGameInStorage, saveGameToStorage } from "./logic/storage/storageManager";
 
 
 
 function App() {
-  const [board, setBoard] = useState(Array(9).fill(null));
-  console.log(board);
-  const [turn, setTurn] = useState(TURNS.X);
+  const [board, setBoard] = useState(() => {
+    const boardFromStorage = window.localStorage.getItem('board')
+    return boardFromStorage ? JSON.parse(boardFromStorage) : Array(9).fill(null)
+  
+  });
+
+  const [turn, setTurn] = useState(() => {
+    const turnFromStorage = window.localStorage.getItem('turn')
+    return turnFromStorage ?? TURNS.X});
   //null sin ganador false empate
   const [winner, setWinner] = useState(null);
 
@@ -21,21 +28,27 @@ function App() {
     setTurn(TURNS.X)
     setWinner(null)
 
+    resetGameInStorage()
+
   }
  
 
   const updateBoard = (index) => {
-    console.dir("updating");
+
     if (board[index] || winner) return;
-    console.dir("changing");
 
     const newBoard = [...board];
     newBoard[index] = turn;
     setBoard(newBoard);
 
     const newTurn = turn == TURNS.X ? TURNS.O : TURNS.X;
+
     setTurn(newTurn);
-    console.dir("turning");
+
+    saveGameToStorage({
+      board: newBoard, 
+      turn: newTurn
+    })
 
     const newWinner = checkWinnerFrom(newBoard);
 
@@ -45,13 +58,15 @@ function App() {
       // TODO: check if the game is over
     } else if (checkEndGame(newBoard)) {
 
-
       setWinner(false)
+
     }
 
   };
 
-
+  useEffect(()=>{
+    console.log("use effect")
+  })
 
   return (
     <main className="board">
