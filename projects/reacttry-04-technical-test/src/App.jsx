@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react'
 import './App.css'
 import { getRandomFact } from './services/facts.js'
-import { useCatImage } from './hooks/useCatImage.jsx'
+import { Otro } from './components/Otro.jsx'
 
 // const CAT_ENDPOINT_RANDOM_FACT = 'https://catfact.ninja/fact'
 // const CAT_ENDPOINT_IMAGE_URL = 'https://cataas.com/cat/says/${threeFirstWords}?size=50&color=red&json=true'
-const CAT_PREFIX_IMAGE_URL = 'https://cataas.com'
+// const CAT_PREFIX_IMAGE_URL = 'https://cataas.com'
 
 const useCatFact = () => {
   const [fact, setFact] = useState()
@@ -21,7 +21,6 @@ const useCatFact = () => {
 
 export function App () {
   const { fact, refreshFact } = useCatFact()
-  const { imageUrl } = useCatImage({ fact })
 
   const handleClick = async () => {
     refreshFact()
@@ -33,8 +32,7 @@ export function App () {
       <button onClick={handleClick}>Get new fact</button>
       <section>
         {fact && <p>{fact}</p>}
-
-        {imageUrl && <img src={`${CAT_PREFIX_IMAGE_URL}/cat/says/${fact}`} alt='image extracted using three words from a fact' />}
+        <Otro />
       </section>
     </main>
   )

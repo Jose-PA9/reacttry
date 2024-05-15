@@ -78,8 +78,11 @@ function App () {
 
         <Square isSelected={turn === TURNS.O}>{TURNS.O}</Square>
       </section>
+      
       <WinnerModal winner={winner} resetGame={resetGame} />
+
     </main>
+
   )
 }
 
